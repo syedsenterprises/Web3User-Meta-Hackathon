@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node-version }} on ubuntu-24.04
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["22.13.0", "24", "26"]
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: web3user_witness_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d web3user_witness_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: "5432"
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: web3user_witness_test
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build SDK distribution
+        run: npm run build
+
+      - name: Verify TypeScript compilation
+        run: npx tsc --noEmit
+
+      - name: Run test suite
+        run: npx vitest run --exclude "**/*.real.test.ts"
+
+      - name: Run basic authorization example
+        run: npx tsx examples/basic-authorization.ts
+
+      - name: Run persistent replay verification
+        run: npm run demo:persistent-replay -- --verify
+
+      - name: Verify package dry-run
+        run: npm pack --dry-run --json
+
+  container-verify:
+    name: Linux container verification
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Run containerized verification with isolated PostgreSQL
+        run: docker compose up --build --abort-on-container-exit --exit-code-from tester
+
+      - name: Clean up verification containers
+        if: always()
+        run: docker compose down -v

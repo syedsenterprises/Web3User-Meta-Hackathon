@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Web3User Permission Lab engineering status, roadmap, and architecture mindmap: M13-D development, 655 Linux-compatible tests, and open production-readiness gates.">
+<meta name="theme-color" content="#101a2c">
+<title>Web3User Permission Lab &mdash; Development Preview</title>
+<link rel="stylesheet" href="css/demo.css">
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#111d30;--line:#263752;--text:#eef4ff;--muted:#a7b6cc;--cyan:#71e2d0;--blue:#89b4ff;--gold:#ffd48a;--green:#7ce38b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#182a45 0,transparent 45%),var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+a{color:var(--cyan)}.wrap{width:min(1100px,calc(100% - 36px));margin:auto}.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0;border-bottom:1px solid var(--line)}.brand{font-weight:750;letter-spacing:.2px}.pill{font-size:.78rem;color:var(--gold);border:1px solid #735a2b;background:#332a19;padding:5px 10px;border-radius:999px}
+.hero{padding:76px 0 44px;max-width:880px}.eyebrow{color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:2px;font-size:.78rem}.hero h1{font-size:clamp(2.5rem,6vw,4.5rem);line-height:1.08;letter-spacing:-.04em;margin:15px 0 22px}.hero p{color:var(--muted);font-size:1.12rem;max-width:780px}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}.btn{display:inline-block;text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:11px 16px;font-weight:700}.btn.primary{background:var(--cyan);color:#07151b;border-color:var(--cyan)}.btn:hover{filter:brightness(1.08)}
+.notice{border:1px solid #735a2b;background:#211e19;border-radius:14px;padding:18px 20px;color:#ffe5b4;margin:8px 0 36px}.notice strong{color:#fff}
+.checkpoint-box{background:linear-gradient(145deg,#13233d,#0e192c);border:1px solid #2e4366;border-radius:16px;padding:24px;margin-bottom:44px}
+.checkpoint-header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:18px}
+.checkpoint-title{font-size:1.35rem;font-weight:750;color:#fff}
+.checkpoint-tag{font-size:.82rem;font-weight:700;padding:4px 10px;border-radius:6px;background:#183626;color:var(--green);border:1px solid #2e6244}
+.checkpoint-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.stat-item{background:#0d1626;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.stat-label{font-size:.78rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
+.stat-val{font-size:1.02rem;color:var(--text);font-weight:600}
+.stat-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88rem;color:var(--cyan)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:20px 0 44px}
+.card{background:linear-gradient(145deg,#132139,#101a2c);border:1px solid var(--line);border-radius:16px;padding:22px}
+.card h3{margin:0 0 10px;font-size:1.15rem;color:#fff}.card p{margin:0;color:var(--muted);font-size:.95rem}
+section{padding:16px 0}h2{font-size:1.8rem;letter-spacing:-.02em;margin-bottom:8px}.muted{color:var(--muted)}
+.status{display:inline-block;font-size:.74rem;font-weight:750;padding:3px 8px;border-radius:6px;background:#123c38;color:#9bf0df}
+.planned{background:#2b2a38;color:#c9c6ff}.current{background:#352c16;color:var(--gold);border:1px solid #735a2b}
+.roadmap{display:grid;gap:12px;margin-top:18px}
+.milestone{display:grid;grid-template-columns:85px 1fr auto;gap:14px;align-items:start;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:#101a2a}
+.milestone p{margin:4px 0 0;color:var(--muted);font-size:.92rem}.id{color:var(--blue);font-weight:800}
+footer{margin-top:50px;padding:25px 0 35px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+@media(max-width:650px){.hero{padding-top:42px}.milestone{grid-template-columns:1fr;gap:8px}.milestone .status{justify-self:start}.nav{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="wrap nav">
+  <div class="brand">&#9672; Web3User Permission Lab</div>
+  <span class="pill">ENGINEERING STATUS &middot; 03 NOV 2026</span>
+</header>
+<main class="wrap">
+<section class="hero">
+  <div class="eyebrow">Explicit permissions for Web3 actions</div>
+  <h1>Make transaction rules easier to inspect, test, and reason about.</h1>
+  <p>Web3User Permission Lab is an experimental, off-chain transaction authorization SDK for Node.js. Its implementation has advanced from the ERC-20 policy evaluator into persistent authorization governance, cumulative budgets, monotonic witness infrastructure, and a durable-witness / consensus development track. The current public site remains an informational static preview: it is not a hosted authorization API, production wallet, transaction broadcaster, or production security service.</p>
+  <div class="actions">
+    <a class="btn primary" href="#demo">Interactive Policy Playground</a>
+    <a class="btn" href="assets/web3user-engineering-roadmap-2026-11-03.pdf" target="_blank" rel="noopener noreferrer">Read current engineering roadmap</a>
+    <a class="btn" href="assets/web3user-project-mindmap-2026-11-03.pdf" target="_blank" rel="noopener noreferrer">Open current project mindmap</a>
+    <a class="btn" href="assets/web3user-whitepaper-v0.3.0.pdf" target="_blank" rel="noopener noreferrer">Read historical white paper (v0.3.0)</a>
+  </div>
+</section>
+
+<div class="notice">
+  <strong>Development-stage notice:</strong> Web3User is an off-chain decision SDK, not a smart contract, blockchain validator, or transaction broadcaster. This static preview site is purely an informational document, not a functioning backend, hosted API, or interactive wallet playground. The prototype has not undergone an independent commercial security audit. Do not use it to protect real funds or authorize production transactions.
+</div>
+
+<section>
+  <div class="checkpoint-box">
+    <div class="checkpoint-header">
+      <div class="checkpoint-title">Current Engineering Snapshot &mdash; Milestone 13-D / DR-2B</div>
+      <span class="checkpoint-tag">DEVELOPMENT BRANCH · NOT A STABLE RELEASE</span>
+    </div>
+    <div class="checkpoint-grid">
+      <div class="stat-item">
+        <div class="stat-label">Development Branch HEAD</div>
+        <div class="stat-code">25bfe62fbb1542e2f8512f522f9c8e4892b4ad97</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;">feature/m13-d-consensus · pushed to origin</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Public Release Tag</div>
+        <div class="stat-code">v0.1.0-rc.1</div>
+        <div style="font-size:0.8rem;color:var(--gold);margin-top:2px;">Historical release candidate; not the current development HEAD</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Linux Compose Verification</div>
+        <div class="stat-val" style="color:var(--green);">655/655 passed · 32 files</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;">Local isolated PostgreSQL harness · 26 Windows real-etcd tests excluded</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Source Protection</div>
+        <div class="stat-val" style="color:var(--cyan);">Phase 1-A committed and pushed</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;">Exactly five approved deployment / verification files; local and remote synced</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Implemented Security &amp; Durability Foundation</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Multi-Process Race &amp; Replay Prevention</h3>
+      <p>Deterministic IPC rendezvous barriers release competing OS processes simultaneously to attempt consuming the same V3 authorization; tests strictly enforce exactly one ALLOW and three domain-level DENY outcomes with one persistent record.</p>
+    </article>
+    <article class="card">
+      <h3>Transaction Rollback &amp; Contention Retries</h3>
+      <p>Immediate SQLite write transactions (<code>BEGIN IMMEDIATE;</code>) roll back partial writes and intermediate clock updates on failure. Bounded retry loops with non-spinning sleep resolve transient contention or fail closed predictably.</p>
+    </article>
+    <article class="card">
+      <h3>Authorization &amp; Signing-Key Boundaries</h3>
+      <p>Rigorous boundary tests enforce strict rejection at the exact expiration second (<code>nowSeconds &gt;= expiresAtSeconds</code>), clip expiry to authoritative policy/key caps, and enforce key validity windows and post-retirement forgery rejection.</p>
+    </article>
+    <article class="card">
+      <h3>Safe TTL Arithmetic &amp; Overflow Prevention</h3>
+      <p>Subtraction-first validity window calculation prevents integer overflow when evaluating large TTL inputs up to <code>Number.MAX_SAFE_INTEGER</code>, ensuring effective expiration deadlines never exceed JavaScript safe integer limits.</p>
+    </article>
+    <article class="card">
+      <h3>Persistent-State Invariants Across Restarts</h3>
+      <p>Durable SQLite table schemas, policy revisions, key governance states (active, retired, revoked), and monotonic clock high-water marks survive connection closes and restarts without state loss or corruption.</p>
+    </article>
+    <article class="card">
+      <h3>Process-Crash Recovery (WAL Journaling)</h3>
+      <p>Abrupt child worker termination during active uncommitted write transactions confirms automatic SQLite WAL rollback upon reopen. <em>Note: Qualified strictly as process-crash recovery testing, not physical power-loss durability.</em></p>
+    </article>
+    <article class="card">
+      <h3>Durable Witness &amp; Reconciliation</h3>
+      <p>Milestones 11 through 13-C.1 establish the monotonic witness adapter, bounded reconciliation pipeline, and durable witness lifecycle integration in Git history.</p>
+    </article>
+    <article class="card">
+      <h3>Consensus Development Track</h3>
+      <p>The M13-D durable-witness / consensus foundation is committed on the development branch. Real-etcd integration remains a separately gated validation stage.</p>
+    </article>
+    <article class="card">
+      <h3>Reproducible Container Verification</h3>
+      <p>The accepted Linux Compose harness passed 655 tests across 32 files. The 26 Windows real-etcd tests were excluded and require separate native validation.</p>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>Current Architecture: Implemented vs. Not Yet Production-Ready</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Implemented / Committed Foundation</h3>
+      <p>&bull; ERC-20 evaluator, canonical binding, Ed25519 V3 authorization artifacts.<br>
+      &bull; SQLite WAL persistence, single-use replay protection, policy/key governance, cumulative budgets.<br>
+      &bull; Monotonic clock and witness lifecycle, fail-closed recovery, bounded reconciliation pipeline.<br>
+      &bull; Milestones M0–M13-C.1 in Git history; M13-D durable-witness / consensus foundation committed on the development branch.<br>
+      &bull; DR-2B isolated Linux Compose harness accepted; 655/655 Linux-compatible tests passed.</p>
+    </article>
+    <article class="card">
+      <h3>Open Production Gates</h3>
+      <p>&bull; Revocation freshness worker and synchronization validation.<br>
+      &bull; Canonical receipt preimage compatibility across gRPC and Engine.<br>
+      &bull; AWS KMS Witness Signer adapter and contract tests.<br>
+      &bull; Air-gapped backup-key ceremony and cross-store restore validation.<br>
+      &bull; RPO/RTO restore drills and independent security audit.</p>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>Development Roadmap &mdash; Updated 03 November 2026</h2>
+  <div class="roadmap">
+    <div class="milestone">
+      <div class="id">M0&ndash;M8</div>
+      <div><strong>Policy Engine, Cryptographic Authorization, Persistence &amp; Budgets</strong><p>ERC-20 evaluation, canonical binding, Ed25519 V3 artifacts, SQLite WAL replay protection, governance, cumulative budgets, and hardening.</p></div>
+      <span class="status">IMPLEMENTED</span>
+    </div>
+    <div class="milestone">
+      <div class="id">M9&ndash;M10</div>
+      <div><strong>Adversarial Security &amp; Disaster-Recovery Hardening</strong><p>Budget hardening, lock-hold optimization, adversarial concurrency, and recovery design work represented in milestone history.</p></div>
+      <span class="status">COMMITTED</span>
+    </div>
+    <div class="milestone">
+      <div class="id">M11</div>
+      <div><strong>Monotonic Witness Adapter &amp; Fail-Closed Recovery</strong><p>Monotonic witness adapter and fail-closed recovery foundation.</p></div>
+      <span class="status">COMMITTED</span>
+    </div>
+    <div class="milestone">
+      <div class="id">M12 / 13-B</div>
+      <div><strong>Durable Witness &amp; Bounded Reconciliation Pipeline</strong><p>Durable monotonic witness and bounded reconciliation pipeline.</p></div>
+      <span class="status">COMMITTED</span>
+    </div>
+    <div class="milestone">
+      <div class="id">M13-C / C.1</div>
+      <div><strong>Durable Witness Lifecycle &amp; Startup Synchronization Remediation</strong><p>Integrated lifecycle and startup synchronization vulnerability remediation on main.</p></div>
+      <span class="status">MAIN</span>
+    </div>
+    <div class="milestone">
+      <div class="id">M13-D</div>
+      <div><strong>Durable Witness / Consensus Foundation</strong><p>Foundation committed on feature/m13-d-consensus. The real-etcd integration harness is a separate validation stage and is not accepted yet.</p></div>
+      <span class="status current">IN PROGRESS</span>
+    </div>
+    <div class="milestone">
+      <div class="id">DR-2B</div>
+      <div><strong>Reproducible Non-Root Docker &amp; Compose Verification</strong><p>32 Linux-compatible test files and 655 tests passed in an isolated PostgreSQL Compose harness. The 26 Windows real-etcd tests were excluded.</p></div>
+      <span class="status">ACCEPTED</span>
+    </div>
+    <div class="milestone">
+      <div class="id">Phase 1-A</div>
+      <div><strong>Source Protection</strong><p>Exactly five approved Docker / CI / documentation files committed and pushed as 25bfe62; protected local data was excluded.</p></div>
+      <span class="status">COMPLETE</span>
+    </div>
+    <div class="milestone">
+      <div class="id">NEXT</div>
+      <div><strong>Production Readiness Gates</strong><p>Revocation freshness, receipt preimage compatibility, KMS signer, air-gapped backup keys, cross-store restore, measured RPO/RTO, and independent audit.</p></div>
+      <span class="status planned">BLOCKED</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Production Readiness — Open Blockers</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Revocation Freshness</h3>
+      <p>The 30-second fail-closed freshness gate still needs reliable background synchronization and integration validation.</p>
+    </article>
+    <article class="card">
+      <h3>Receipt Canonicalization</h3>
+      <p>gRPC and Engine currently use incompatible signing-preimage formats. A shared canonical format and verification tests are required.</p>
+    </article>
+    <article class="card">
+      <h3>Hardware-Backed Signing</h3>
+      <p>The AWS KMS Witness Signer adapter and its algorithm / encoding contract tests remain outstanding.</p>
+    </article>
+    <article class="card">
+      <h3>Offline Recovery &amp; Restore</h3>
+      <p>Air-gapped backup-key custody, cross-store PostgreSQL / etcd / SQLite recovery, and measured RPO/RTO drills are not complete.</p>
+    </article>
+  </div>
+  <p class="muted">The current PostgreSQL-backed witness path remains the live authority / single point of failure. Do not interpret the committed consensus foundation as proof that etcd is already the live authorization path. No independent commercial security audit has been completed.</p>
+</section>
+
+<section class="demo-section" id="demo">
+  <div class="demo-header">
+    <div class="eyebrow">Interactive Demonstration &middot; Client-Side Policy Evaluator</div>
+    <h2>Interactive Policy Evaluator Playground</h2>
+    <p>Test real-time off-chain authorization decisions against custom policies and transaction requests. The evaluation logic below executes natively in your browser using pure TypeScript/JavaScript equivalent to <code>src/policy.ts</code>.</p>
+  </div>
+
+  <!-- Meta Muse Spark AI Policy Assistant -->
+  <div class="ai-assistant-wrapper" id="ai-assistant">
+    <div class="ai-assistant-header">
+      <div class="ai-badge-group">
+        <span class="ai-badge">&#10022; Meta Muse Spark 1.3</span>
+        <span class="ai-model-tag" id="ai-status-tag">Model: muse-spark-1.3 &middot; Endpoint: https://api.meta.ai/v1/chat/completions</span>
+      </div>
+      <h3 style="margin:8px 0 4px;font-size:1.35rem;color:#fff;">AI Natural-Language Policy Assistant</h3>
+      <p style="margin:0 0 16px;color:var(--muted);font-size:0.95rem;">
+        Describe agent transaction constraints in plain English. Meta Muse Spark proposes a strongly-typed, schema-validated Web3User policy.
+        <strong style="color:var(--gold);">Strict Invariant:</strong> AI output is untrusted and requires explicit human review and approval before entering the deterministic evaluator.
+      </p>
+    </div>
+
+    <div class="ai-assistant-body">
+      <div class="form-group" style="margin-bottom:12px;">
+        <label for="ai-prompt-input" style="display:flex;justify-content:space-between;align-items:center;">
+          <span>Natural-Language Policy Description</span>
+          <span style="font-size:0.75rem;color:var(--muted);" id="ai-char-counter">0 / 2,000 chars</span>
+        </label>
+        <textarea id="ai-prompt-input" class="form-control" rows="3" placeholder="e.g. Allow an autonomous agent to spend at most 0.25 ETH per transaction, with a cumulative daily budget of 2 ETH, only on approved contract addresses." spellcheck="false"></textarea>
+      </div>
+
+      <div class="ai-prompt-suggestions" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+        <span style="font-size:0.75rem;color:var(--cyan);font-weight:700;align-self:center;">Try Example:</span>
+        <button type="button" class="btn-inline ai-sample-btn" data-prompt="Allow an autonomous agent to spend at most 0.25 ETH per transaction, with a cumulative daily budget of 2 ETH, on contract 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 to 0x2222222222222222222222222222222222222222.">0.25 ETH Limit + 2 ETH Daily Budget</button>
+        <button type="button" class="btn-inline ai-sample-btn" data-prompt="Limit USDC micro-transfers to 500 USDC per transaction with an hourly cumulative spending cap of 1,000 USDC.">500 USDC Micro-transfers (Hourly Window)</button>
+        <button type="button" class="btn-inline ai-sample-btn" data-prompt="Allow agent to interact with target 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 with maximum per-action amount of 100 USDC and no cumulative window.">Strict 100 USDC Limit (No Budget)</button>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;">
+        <button type="button" id="btn-ai-generate" class="btn primary" style="cursor:pointer;">Synthesize Policy Proposal</button>
+        <span id="ai-spinner" style="display:none;color:var(--cyan);font-size:0.9rem;">Synthesizing with muse-spark-1.3...</span>
+      </div>
+
+      <!-- AI Proposal Results Card (initially hidden) -->
+      <div id="ai-proposal-results" style="display:none;margin-top:16px;border-top:1px solid var(--line);padding-top:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h4 style="margin:0;font-size:1.1rem;color:#fff;">Synthesized Policy Proposal</h4>
+          <span id="ai-validation-badge" class="decision-badge" style="font-size:0.8rem;padding:3px 10px;">VALIDATING</span>
+        </div>
+
+        <div id="ai-explanation-box" style="background:#0d1626;border:1px solid var(--line);border-radius:8px;padding:12px 14px;color:var(--text);font-size:0.92rem;margin-bottom:14px;"></div>
+
+        <!-- Invariants & Schema Verification Checklist -->
+        <div style="margin-bottom:14px;">
+          <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;color:var(--cyan);font-weight:700;margin-bottom:6px;">Schema &amp; Safety Invariant Checks</div>
+          <ul id="ai-validation-list" style="margin:0;padding-left:20px;font-size:0.88rem;color:var(--muted);display:grid;gap:4px;"></ul>
+        </div>
+
+        <!-- Proposed Structured JSON -->
+        <div style="margin-bottom:16px;">
+          <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;margin-bottom:6px;">Proposed Structured Policy (JSON)</div>
+          <pre style="background:#080d17;border:1px solid var(--line);border-radius:8px;padding:14px;margin:0;overflow-x:auto;"><code id="ai-proposal-json" style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:0.85rem;color:var(--cyan);"></code></pre>
+        </div>
+
+        <!-- Explicit Human Approval Gate -->
+        <div style="background:#18281a;border:1px solid #2e6244;border-radius:10px;padding:16px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;">
+          <div>
+            <div style="font-weight:700;color:var(--green);font-size:0.95rem;">Explicit Human Review &amp; Approval Required</div>
+            <div style="font-size:0.85rem;color:#c0eac5;">Confirm the synthesized rules above before loading them into the deterministic evaluation engine.</div>
+          </div>
+          <button type="button" id="btn-ai-approve" class="btn" style="background:var(--green);color:#071b0b;border-color:var(--green);font-weight:700;cursor:pointer;">Approve &amp; Load into Policy Playground &rarr;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="demo-presets-wrapper">
+    <div class="presets-label">Representative Scenarios (Presets)</div>
+    <div class="demo-presets-grid" id="demo-presets"></div>
+    <div class="preset-description-box" id="preset-description">Loading preset description...</div>
+  </div>
+
+  <div class="demo-workspace">
+    <!-- Policy Card -->
+    <div class="demo-card">
+      <div class="demo-card-title">
+        <span>Governance Policy</span>
+        <span class="demo-badge-sub">Authoritative Rules</span>
+      </div>
+      <div class="form-group">
+        <label for="policy-id">Policy ID</label>
+        <input type="text" id="policy-id" class="form-control" value="usdc-transfer-policy-v1" spellcheck="false">
+      </div>
+      <div class="form-group">
+        <label for="allowed-target">Allowed Target Contract (ERC-20)</label>
+        <input type="text" id="allowed-target" class="form-control" value="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" spellcheck="false">
+      </div>
+      <div class="form-group">
+        <label for="allowed-recipient">Allowed Recipient Address</label>
+        <input type="text" id="allowed-recipient" class="form-control" value="0x2222222222222222222222222222222222222222" spellcheck="false">
+      </div>
+      <div class="form-group">
+        <label for="max-amount">Max Amount Limit (base-10 uint256 units)</label>
+        <input type="text" id="max-amount" class="form-control" value="1000000000" spellcheck="false">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="valid-from">Valid From (Unix timestamp)</label>
+          <input type="text" id="valid-from" class="form-control" value="1800000000" spellcheck="false">
+        </div>
+        <div class="form-group">
+          <label for="expires-at">Expires At (Unix timestamp)</label>
+          <input type="text" id="expires-at" class="form-control" value="1800086400" spellcheck="false">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="budget-window">Cumulative Window (M8)</label>
+          <select id="budget-window" class="form-control">
+            <option value="NONE">None (Unconstrained)</option>
+            <option value="HOURLY">HOURLY (Fixed UTC 1h)</option>
+            <option value="DAILY">DAILY (Fixed UTC 24h)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="max-cumulative-amount">Cumulative Budget Cap</label>
+          <input type="text" id="max-cumulative-amount" class="form-control" value="" placeholder="e.g. 1000000000" spellcheck="false">
+        </div>
+      </div>
+      <div class="checkbox-group">
+        <input type="checkbox" id="policy-revoked">
+        <label for="policy-revoked">Revoke this policy (admin kill-switch)</label>
+      </div>
+    </div>
+
+    <!-- Proposed Transaction Action Card -->
+    <div class="demo-card">
+      <div class="demo-card-title">
+        <span>Proposed Transaction</span>
+        <span class="demo-badge-sub">Candidate Action</span>
+      </div>
+      <div class="form-group">
+        <label for="action-target">Target Contract Address</label>
+        <input type="text" id="action-target" class="form-control" value="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" spellcheck="false">
+      </div>
+      <div class="form-group">
+        <label for="action-recipient">Destination Recipient</label>
+        <input type="text" id="action-recipient" class="form-control" value="0x2222222222222222222222222222222222222222" spellcheck="false">
+      </div>
+      <div class="form-group">
+        <label for="action-amount">Claimed Amount (uint256 units)</label>
+        <input type="text" id="action-amount" class="form-control" value="500000000" spellcheck="false">
+      </div>
+      <div class="form-group">
+        <label for="simulated-spent">Simulated Prior Window Spend (M8)</label>
+        <input type="text" id="simulated-spent" class="form-control" value="" placeholder="0 (defaults to 0 if empty)" spellcheck="false">
+      </div>
+      <div class="form-group">
+        <label for="action-calldata">
+          Raw Transaction Calldata (68-byte hex)
+          <button type="button" id="btn-sync-calldata" class="btn-inline" title="Regenerate calldata from recipient and amount">Sync with Amount</button>
+        </label>
+        <textarea id="action-calldata" class="form-control" rows="3" spellcheck="false" style="resize:vertical;"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="eval-timestamp">
+          Evaluation Timestamp (nowSeconds)
+          <button type="button" id="btn-set-now" class="btn-inline" title="Set to current local time">Use Current Time</button>
+        </label>
+        <input type="text" id="eval-timestamp" class="form-control" value="1800000100" spellcheck="false">
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-results-wrapper">
+    <!-- Live Decision Banner -->
+    <div id="demo-decision-banner" class="decision-banner status-allow" role="region" aria-live="polite">
+      <div class="decision-header">
+        <span id="demo-decision-badge" class="decision-badge badge-allow">ALLOW</span>
+        <span class="decision-title">Evaluation Decision</span>
+      </div>
+      <ul id="demo-decision-reasons" class="decision-reasons"></ul>
+    </div>
+
+    <!-- Rule Verification Checklist -->
+    <div class="checklist-container">
+      <h3 class="checklist-title">Evaluator Invariant &amp; Rule Checklist</h3>
+      <ul id="demo-checklist" class="checklist"></ul>
+    </div>
+
+    <!-- Calldata Inspector -->
+    <div class="inspector-card">
+      <div class="inspector-title">Calldata ABI Breakdown Inspector</div>
+      <div id="demo-calldata-display" class="calldata-code-block"></div>
+      <div id="demo-calldata-decoded" class="calldata-decoded-info"></div>
+    </div>
+
+    <!-- Generated TypeScript Integration Code -->
+    <div class="code-generator-card">
+      <div class="code-header">
+        <h4>Copyable Node.js TypeScript Integration</h4>
+        <div>
+          <span id="copy-feedback" style="color:var(--green);font-size:0.8rem;margin-right:8px;font-weight:600;"></span>
+          <button type="button" id="btn-copy-code" class="btn-copy">Copy TypeScript Code</button>
+        </div>
+      </div>
+      <pre class="code-pre"><code id="demo-ts-code"></code></pre>
+    </div>
+
+    <!-- Architecture Boundary Notice -->
+    <div class="arch-boundary-box">
+      <h4>Architectural Boundary Notice</h4>
+      <p><strong>What is running in your browser:</strong> The policy evaluation, cumulative window budget checks, ERC-20 transfer calldata decoding, parameter normalization, and rule checks shown above run 100% client-side in pure JavaScript. No data is transmitted to an external server.</p>
+      <p style="margin-top:8px;"><strong>What requires Node.js runtime:</strong> Full cryptographic Ed25519 authorization signing, monotonic ClockGuard anchoring, persistent single-use replay protection, and multi-process atomic budget accumulators require the Node.js SDK (<code>Web3UserEngine</code>) with built-in SQLite WAL mode. To test multi-process replay attacks and persistent locking on your machine, run <code>npm run demo:persistent-replay</code>.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Technical Snapshot</h2>
+  <p class="muted">Language: TypeScript &middot; Tooling: Node.js (&gt;=22.13.0), npm, Vitest &middot; Storage: SQLite (built-in node:sqlite, WAL mode) &middot; Signatures: Ed25519 (node:crypto) &middot; Version Control: Git &amp; GitHub.</p>
+  <p class="muted">Current supported selector: <code>0xa9059cbb</code> &mdash; ERC-20 <code>transfer(address,uint256)</code>. The prototype enforces single-use persistent replay protection and atomic cumulative budgets over fixed UTC hourly and daily windows. Arbitrary smart contract parsing and universal wallet enforcement boundaries are not implemented.</p>
+</section>
+
+<section>
+  <h2>Project Documents</h2>
+  <ul>
+    <li><a href="assets/web3user-engineering-roadmap-2026-11-03.pdf" target="_blank" rel="noopener noreferrer"><strong>Engineering status &amp; roadmap (PDF)</strong></a> &mdash; Updated 03 November 2026</li>
+    <li><a href="assets/web3user-project-mindmap-2026-11-03.pdf" target="_blank" rel="noopener noreferrer"><strong>System mindmap &amp; architectural tree (PDF)</strong></a> &mdash; Updated 03 November 2026</li>
+    <li><a href="assets/web3user-whitepaper-v0.3.0.pdf" target="_blank" rel="noopener noreferrer">Technical white paper &mdash; v0.3.0 (PDF)</a> &mdash; Historical Milestone 6.4 draft (23 October 2026)</li>
+    <li><a href="assets/web3user-project-mindmap-v0.3.0.pdf" target="_blank" rel="noopener noreferrer">Project mindmap &mdash; v0.3.0 (PDF)</a> &mdash; Historical Milestone 6.4 checkpoint</li>
+    <li><a href="assets/web3user-whitepaper-v0.2.0.pdf" target="_blank" rel="noopener noreferrer">Technical white paper &mdash; v0.2.0 (PDF)</a> &mdash; Historical archival draft</li>
+    <li><a href="assets/web3user-project-mindmap-v0.2.0.pdf" target="_blank" rel="noopener noreferrer">Project mindmap &mdash; v0.2.0 (PDF)</a> &mdash; Historical archival draft</li>
+  </ul>
+</section>
+</main>
+<footer>
+  <div class="wrap">Web3User Permission Lab &middot; Engineering Status Snapshot: 03 November 2026 &middot; Historical public tag: v0.1.0-rc.1 &middot; Informational preview only; not a production authorization service.</div>
+</footer>
+<script type="module">
+  import { initDemo } from "./js/demo-ui.js";
+  initDemo(document.getElementById("demo"));
+</script>
+</body>
+</html>
